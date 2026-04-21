@@ -1,4 +1,4 @@
-# download_buildings.py
+# download_buildings.py - this loads building heights from liverpool hospital to westmead areas
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
