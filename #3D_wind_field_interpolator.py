@@ -238,11 +238,26 @@ if __name__ == "__main__":
     import os
     import pandas as pd
     import matplotlib.pyplot as plt
-    from voxel_grid_builder import VoxelGrid3D   # your existing module
+    import importlib.util
 
+    voxel_grid_builder_path = os.path.join(
+        os.path.dirname(__file__),
+        "# voxel_grid_builder.py"
+    )
+
+    spec = importlib.util.spec_from_file_location(
+        "voxel_grid_builder",
+        voxel_grid_builder_path
+    )
+
+    voxel_grid_builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(voxel_grid_builder)
+
+    VoxelGrid3D = voxel_grid_builder.VoxelGrid3D
+    
     # --- Load existing artefacts ---
     voxel_grid = VoxelGrid3D.load('data/voxel_grid_westmead_liverpool.pkl')
-    wind_df = pd.read_csv('data/wind_historical_synthetic.csv')
+    wind_df = pd.read_csv('data/wind_historical_bom.csv')
 
     # --- Build the wind field from a single observation ---
     wind_field = WindField3D(voxel_grid, reference_height_m=10.0, alpha=0.25)
