@@ -1,27 +1,40 @@
-# Required packages:
 """
-pip install osmnx geopandas pandas numpy matplotlib folium requests
-pip install pyproj shapely rtree
+install.py — AORVA dependency installer.
+
+Run once to install all required packages:
+    python install.py
+
+This is equivalent to:
+    pip install -r requirements.txt
 """
 
-import osmnx as ox
-import geopandas as gpd
-import numpy as np
-import pandas as pd
-from shapely.geometry import Point, Polygon, box
-import matplotlib.pyplot as plt
+import subprocess
+import sys
 
-# Define area of interest: Westmead to Liverpool
-westmead_coords = (-33.8078, 150.9875)  # Westmead Hospital
-liverpool_coords = (-33.9173, 150.9233)  # Liverpool Hospital
 
-# Create bounding box with buffer (5km each side)
-buffer_km = 5.0
-north = max(westmead_coords[0], liverpool_coords[0]) + buffer_km/111
-south = min(westmead_coords[0], liverpool_coords[0]) - buffer_km/111
-east = max(westmead_coords[1], liverpool_coords[1]) + buffer_km/111
-west = min(westmead_coords[1], liverpool_coords[1]) - buffer_km/111
+def main():
+    print("Installing AORVA dependencies from requirements.txt...")
+    result = subprocess.run(
+        [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
+        check=False,
+    )
+    if result.returncode == 0:
+        print("\nAll dependencies installed successfully.")
+        print("\nPipeline execution order:")
+        print("  python scripts/00_download_real_wind.py   # real ERA5 wind data (6x7 nodes)")
+        print("  python scripts/01_download_buildings.py   # OSM buildings")
+        print("  python scripts/02_build_voxel_grid.py    # 3D voxel occupancy grid")
+        print("  python scripts/02b_download_population.py # ABS 2021 population layer")
+        print("  python scripts/03_plan_trajectory.py     # A* reference path + checkpoints")
+        print("  python scripts/04_train_agents.py ppo    # train PPO agent")
+        print("  python scripts/04_train_agents.py sac    # train SAC agent")
+        print("  python scripts/05_visualize.py           # visualise grid + wind field")
+        print("  python scripts/06_evaluate.py            # evaluate trained agents")
+    else:
+        print(f"\nInstallation failed (exit code {result.returncode}).")
+        print("Try manually: pip install -r requirements.txt")
+        sys.exit(result.returncode)
 
-bbox = (north, south, east, west)
 
-print(f"Bounding Box: North={north:.4f}, South={south:.4f}, East={east:.4f}, West={west:.4f}")
+if __name__ == "__main__":
+    main()

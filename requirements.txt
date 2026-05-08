@@ -1,0 +1,29 @@
+# AORVA — Autonomous Drone Organ Delivery Routing via RL Agents
+# Install with: pip install -r requirements.txt
+
+# Geospatial / data
+osmnx>=1.9.0
+geopandas>=0.14.0
+shapely>=2.0.0
+pyproj>=3.6.0
+rtree>=1.2.0
+
+# Numerics / data processing
+numpy>=1.26.0
+pandas>=2.1.0
+scipy>=1.11.0
+
+# HTTP / API
+requests>=2.31.0
+
+# Visualisation
+matplotlib>=3.8.0
+
+# RL training
+gymnasium>=0.29.0
+stable-baselines3>=2.2.0
+torch>=2.1.0
+tensorboard>=2.15.0
+
+# Optional: progress bars in SB3
+tqdm>=4.66.0
