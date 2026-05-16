@@ -86,8 +86,9 @@ def visualize_wind_field_rich(wind_field, voxel_grid, node_df=None,
       - Each observation node shown as a coloured dot + direction arrow
       - Hospital markers
     """
-    vs  = voxel_grid.voxel_size_m
-    iz  = int(np.clip(altitude_m / vs, 0, voxel_grid.nz - 1))
+    vs   = voxel_grid.voxel_size_m
+    vs_z = getattr(voxel_grid, 'voxel_size_z_m', vs)
+    iz   = int(np.clip(altitude_m / vs_z, 0, voxel_grid.nz - 1))
 
     U = wind_field.u_field[:, :, iz].T    # (ny, nx)
     V = wind_field.v_field[:, :, iz].T
@@ -203,9 +204,10 @@ if __name__ == "__main__":
 
     voxel_grid = VoxelGrid3D.load('data/voxel_grid_westmead_liverpool.pkl')
 
-    # All valid altitude slices: voxel_size=50 m, max_height=500 m → z=0..9
-    altitudes = list(range(0, voxel_grid.nz * int(voxel_grid.voxel_size_m),
-                           int(voxel_grid.voxel_size_m)))
+    # Ground level + every distinct slice within the drone altitude band (50–150 m).
+    # Finer intervals (e.g. 20 m) collapse to the same z-index at 50 m voxel size,
+    # so the four slices below are the only meaningful distinct levels available.
+    altitudes = [0, 50, 100, 150]
 
     for alt in altitudes:
         visualize_voxel_slice(voxel_grid, altitude_m=alt)
