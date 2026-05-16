@@ -23,7 +23,8 @@ BOUNDS = (150.8233, -34.0173, 151.0875, -33.7078)  # min_lon, min_lat, max_lon, 
 if __name__ == "__main__":
     os.makedirs('data', exist_ok=True)
 
-    grid = VoxelGrid3D(bounds=BOUNDS, voxel_size_m=50, max_height_m=500)
+    grid = VoxelGrid3D(bounds=BOUNDS, voxel_size_m=50, voxel_size_z_m=5,
+                       max_height_m=150)
 
     for candidate in [
         'data/buildings_westmead_liverpool.gpkg',
@@ -50,3 +51,4 @@ if __name__ == "__main__":
 
     grid.save('data/voxel_grid_westmead_liverpool.pkl')
     print("\nStep 2 complete.")
+
