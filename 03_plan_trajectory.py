@@ -57,3 +57,4 @@ if __name__ == "__main__":
                          save_path='outputs/reference_trajectory.png')
 
     print("\nStep 3 complete.")
+
